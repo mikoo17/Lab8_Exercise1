@@ -12,7 +12,11 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Choreographer.FrameCallback {
+
     public interface Callbacks {
         void onFrameRendered(int fps);
         void onGameUpdated(int ticks);
@@ -29,6 +33,14 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private long lastTime = System.currentTimeMillis();
     private long tickTime;
     public Callbacks callbacks;
+
+    private String elementToDisplay = "BALL"; // Domyślnie piłki
+    private List<Ball> balls = new ArrayList<>();
+    private List<RotatingSquare> squares = new ArrayList<>();
+
+    private List<Platform> platforms = new ArrayList<>();
+
+
 
     public GameSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -47,10 +59,23 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         screenWidth = size.x;
         screenHeight = size.y;
 
-        ball = new Ball(100, 100, 15, 17, Color.RED, 20);
-        square = new RotatingSquare(200, 200, 10, 12, Color.BLUE, 50, 5); // Inicjalizacja kwadratu
+        // Tworzenie obiektów
+        for (int i = 0; i < 10; i++) {
+            balls.add(new Ball(100 + i * 50, 100 + i * 50, 15, 17, Color.RED, 20));
+            squares.add(new RotatingSquare(100 + i * 50, 100 + i * 50, 10, 12, Color.BLUE, 50, 5));
+        }
+        // Tworzenie platformy powyżej dołu ekranu
+        int platformHeight = 20; // Wysokość platformy
+        int platformWidth = screenWidth; // Szerokość platformy na całą szerokość ekranu
+        int platformY = screenHeight - platformHeight - 100; // Ustawienie pozycji Y platformy
+
+        // Dodanie platformy do listy platform
+        platforms.add(new Platform(0, platformY, platformWidth, platformHeight, Color.GREEN));
     }
 
+    public void setElementToDisplay(String elementToDisplay) {
+        this.elementToDisplay = elementToDisplay;
+    }
     public void setCallbacks(Callbacks callbacks) {
         this.callbacks = callbacks;
     }
@@ -86,20 +111,42 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public void updateGameLogic() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - tickTime >= 1000 / TICKS_PER_SECOND) {
-            ball.update(screenWidth, screenHeight);
-            square.update(screenWidth, screenHeight); // Aktualizacja kwadratu
+            // Aktualizacja logiki gry (ruch, kolizje)
+            for (Ball ball : balls) {
+                ball.update(screenWidth, screenHeight);
+                for (Platform platform : platforms) {
+                    ball.checkCollisionWithPlatform(platform); // Sprawdzenie kolizji piłki z platformą
+                }
+            }
+            for (RotatingSquare square : squares) {
+                square.update(screenWidth, screenHeight);
+                for (Platform platform : platforms) {
+                    square.checkCollisionWithPlatform(platform); // Sprawdzenie kolizji kwadratu z platformą
+                }
+            }
+
             tickTime = currentTime;
         }
     }
 
+
+
     public void renderGame() {
-        if (!surfaceHolder.getSurface().isValid()) {
-            return;
-        }
+        if (!surfaceHolder.getSurface().isValid()) return;
+
         Canvas canvas = surfaceHolder.lockCanvas();
         canvas.drawColor(Color.WHITE); // Clear the canvas
-        ball.draw(canvas, paint);
-        square.draw(canvas, paint); // Rysowanie kwadratu
+
+        if ("BALL".equals(elementToDisplay)) {
+            for (Ball ball : balls) {
+                ball.draw(canvas, paint);
+            }
+        } else if ("SQUARE".equals(elementToDisplay)) {
+            for (RotatingSquare square : squares) {
+                square.draw(canvas, paint);
+            }
+        }
+
         surfaceHolder.unlockCanvasAndPost(canvas);
     }
 

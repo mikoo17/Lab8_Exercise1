@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameActivity">
+    <com.example.lab8_exercise1.GameSurfaceView
+        android:id="@+id/gameSurfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/fpsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="FPS: 0"
+        android:textColor="#00FF00"
+        android:textSize="24sp" />
+    <TextView
+        android:id="@+id/ticksTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fpsTextView"
+        android:layout_marginTop="0dp"
+        android:text="TPS: 0"
+        android:textColor="#00FF00"
+        android:textSize="24sp" />
+</RelativeLayout>
