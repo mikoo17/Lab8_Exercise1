@@ -39,6 +39,8 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private List<RotatingSquare> squares = new ArrayList<>();
 
     private List<Platform> platforms = new ArrayList<>();
+    private WaterZone waterZone;
+    private AirZone airZone;
 
 
 
@@ -62,7 +64,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         // Tworzenie obiektów
         for (int i = 0; i < 10; i++) {
             balls.add(new Ball(100 + i * 50, 100 + i * 50, 15, 17, Color.RED, 20));
-            squares.add(new RotatingSquare(100 + i * 50, 100 + i * 50, 10, 12, Color.BLUE, 50, 5));
+            squares.add(new RotatingSquare(100 + i * 50, 100 + i * 50, 10, 12, Color.GREEN, 50, 5));
         }
         // Tworzenie platformy powyżej dołu ekranu
         int platformHeight = 20; // Wysokość platformy
@@ -113,13 +115,13 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         if (currentTime - tickTime >= 1000 / TICKS_PER_SECOND) {
             // Aktualizacja logiki gry (ruch, kolizje)
             for (Ball ball : balls) {
-                ball.update(screenWidth, screenHeight);
+                ball.update(screenWidth, screenHeight, waterZone, airZone);
                 for (Platform platform : platforms) {
                     ball.checkCollisionWithPlatform(platform); // Sprawdzenie kolizji piłki z platformą
                 }
             }
             for (RotatingSquare square : squares) {
-                square.update(screenWidth, screenHeight);
+                square.update(screenWidth, screenHeight, waterZone, airZone);
                 for (Platform platform : platforms) {
                     square.checkCollisionWithPlatform(platform); // Sprawdzenie kolizji kwadratu z platformą
                 }
@@ -135,7 +137,9 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         if (!surfaceHolder.getSurface().isValid()) return;
 
         Canvas canvas = surfaceHolder.lockCanvas();
-        canvas.drawColor(Color.WHITE); // Clear the canvas
+        canvas.drawColor(Color.WHITE);
+        waterZone.draw(canvas, paint);
+        airZone.draw(canvas,paint);// Clear the canvas
 
         if ("BALL".equals(elementToDisplay)) {
             for (Ball ball : balls) {
@@ -152,6 +156,8 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        waterZone = new WaterZone(0, 400, screenWidth, 200, Color.BLUE);
+        airZone = new AirZone(0,700, screenWidth, 200, Color.GRAY);
         startGameLoop();
     }
 

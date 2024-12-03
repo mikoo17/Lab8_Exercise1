@@ -21,8 +21,17 @@ public class Ball implements Collidable {
         this.radius = radius;
     }
 
-    public void update(int width, int height) {
+    public void update(int width, int height, WaterZone waterZone, AirZone airZone) {
         speedY += gravity; // Dodaj grawitację do prędkości pionowej
+
+        // Sprawdzenie, czy obiekt jest w wodzie
+        if (waterZone != null && waterZone.isInWater(x, y, radius)) {
+            speedY *= 0.8f; // Redukcja prędkości w osi Y przez opór wody
+        }
+        // Sprawdzenie, czy obiekt jest w wodzie
+        if (airZone != null && airZone.isInAir(x, y, radius)) {
+            speedX *= 1.2f; // Redukcja prędkości w osi Y przez opór wody
+        }
         x += speedX;
         y += speedY;
 

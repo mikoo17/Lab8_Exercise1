@@ -30,9 +30,18 @@ public class RotatingSquare implements Collidable {
         this.angle = 0; // Początkowy kąt obrotu
     }
 
-    public void update(int width, int height) {
+    public void update(int width, int height, WaterZone waterZone, AirZone airZone) {
         // Dodanie grawitacji
         speedY += gravity;
+
+        if (waterZone != null && waterZone.isInWater(x + sideLength / 2, y + sideLength / 2, sideLength / 2)) {
+            speedY *= 0.8f; // Redukcja prędkości Y w wodzie
+        }
+
+        // Sprawdzenie, czy obiekt jest w wodzie
+        if (airZone != null && airZone.isInAir(x + sideLength / 2, y + sideLength / 2, sideLength / 2)) {
+            speedX *= 1.2f; // Redukcja prędkości w osi Y przez opór wody
+        }
 
         // Aktualizacja pozycji
         x += speedX;
