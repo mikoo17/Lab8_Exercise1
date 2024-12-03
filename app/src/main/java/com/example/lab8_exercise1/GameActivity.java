@@ -21,9 +21,13 @@ public class GameActivity extends AppCompatActivity {
         // Pobierz informacje z intencji
         Intent intent = getIntent();
         String elementToDisplay = intent.getStringExtra("ELEMENT");
+        int objectCount = intent.getIntExtra("COUNT", 10);
+        String environmentType = intent.getStringExtra("ENVIRONMENT");
 
         // Przekazanie informacji do GameSurfaceView
         gameSurfaceView.setElementToDisplay(elementToDisplay);
+        gameSurfaceView.setObjectCount(objectCount);
+        gameSurfaceView.setEnvironmentType(environmentType);
 
         gameSurfaceView.setCallbacks(new GameSurfaceView.Callbacks() {
             @Override

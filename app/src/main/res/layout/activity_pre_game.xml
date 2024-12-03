@@ -1,20 +1,98 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Przyciski wyboru -->
-    <Button
-        android:id="@+id/ballButton"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chose objects:"
+        android:textSize="18sp" />
+
+    <RadioGroup
+        android:id="@+id/objectTypeGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/ballOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Balls" />
+
+        <RadioButton
+            android:id="@+id/squareOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Squares" />
+
+        <RadioButton
+            android:id="@+id/bothOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Both" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose number of objects:"
+        android:textSize="18sp" />
+
+    <SeekBar
+        android:id="@+id/objectCountSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show Balls" />
+        android:max="20" />
+
+    <TextView
+        android:id="@+id/objectCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Number of objects: 10"
+        android:textSize="16sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose environment:"
+        android:textSize="18sp" />
+
+    <RadioGroup
+        android:id="@+id/environmentTypeGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/noZoneOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Standard" />
+
+        <RadioButton
+            android:id="@+id/waterZoneOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Water" />
+
+        <RadioButton
+            android:id="@+id/airZoneOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Air" />
+        <RadioButton
+            android:id="@+id/bothZoneOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Both" />
+    </RadioGroup>
 
     <Button
-        android:id="@+id/squareButton"
-        android:layout_width="match_parent"
+        android:id="@+id/startSimulationButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Squares" />
+        android:text="Rozpocznij Symulację" />
+
 </LinearLayout>

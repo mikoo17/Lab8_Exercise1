@@ -39,8 +39,9 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private List<RotatingSquare> squares = new ArrayList<>();
 
     private List<Platform> platforms = new ArrayList<>();
-    private WaterZone waterZone;
-    private AirZone airZone;
+    private WaterZone waterZone = null;
+    private AirZone airZone = null;
+    private String environmentType = "NONE";
 
 
 
@@ -78,6 +79,19 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public void setElementToDisplay(String elementToDisplay) {
         this.elementToDisplay = elementToDisplay;
     }
+    public void setEnvironmentType(String environmentType) {
+        this.environmentType = environmentType;
+    }
+    public void setObjectCount(int count) {
+        balls.clear();
+        squares.clear();
+
+        for (int i = 0; i < count; i++) {
+            balls.add(new Ball(100 + i * 50, 100 + i * 50, 15, 17, Color.RED, 20));
+            squares.add(new RotatingSquare(100 + i * 50, 100 + i * 50, 10, 12, Color.GREEN, 50, 5));
+        }
+    }
+
     public void setCallbacks(Callbacks callbacks) {
         this.callbacks = callbacks;
     }
@@ -138,8 +152,17 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
         Canvas canvas = surfaceHolder.lockCanvas();
         canvas.drawColor(Color.WHITE);
-        waterZone.draw(canvas, paint);
-        airZone.draw(canvas,paint);// Clear the canvas
+
+        if ("WATER".equals(environmentType)) {
+            waterZone.draw(canvas, paint);
+        } else if ("AIR".equals(environmentType)) {
+            airZone.draw(canvas,paint);// Clear the canvas
+        }else if ("BOTH".equals(environmentType)){
+            waterZone.draw(canvas, paint);
+            airZone.draw(canvas,paint);
+        }
+
+
 
         if ("BALL".equals(elementToDisplay)) {
             for (Ball ball : balls) {
@@ -150,14 +173,31 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                 square.draw(canvas, paint);
             }
         }
+        if ("BOTH".equals(elementToDisplay)) {
+            for (Ball ball : balls) {
+                ball.draw(canvas, paint);
+            }
+            for (RotatingSquare square : squares) {
+                square.draw(canvas, paint);
+            }
+        }
+
 
         surfaceHolder.unlockCanvasAndPost(canvas);
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        waterZone = new WaterZone(0, 400, screenWidth, 200, Color.BLUE);
-        airZone = new AirZone(0,700, screenWidth, 200, Color.GRAY);
+
+        if ("WATER".equals(environmentType)) {
+            waterZone = new WaterZone(0, 400, screenWidth, 200, Color.BLUE);
+        } else if ("AIR".equals(environmentType)) {
+            airZone = new AirZone(0,700, screenWidth, 200, Color.GRAY);
+        }else if ("BOTH".equals(environmentType)){
+            waterZone = new WaterZone(0, 400, screenWidth, 200, Color.BLUE);
+            airZone = new AirZone(0,700, screenWidth, 200, Color.GRAY);
+        }
+
         startGameLoop();
     }
 
@@ -170,4 +210,5 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public void surfaceDestroyed(SurfaceHolder holder) {
         Choreographer.getInstance().removeFrameCallback(this);
     }
+
 }
