@@ -18,16 +18,14 @@ public class GameActivity extends AppCompatActivity {
         ticksTextView = findViewById(R.id.ticksTextView);
         gameSurfaceView = findViewById(R.id.gameSurfaceView);
 
-        // Pobierz informacje z intencji
-        Intent intent = getIntent();
-        String elementToDisplay = intent.getStringExtra("ELEMENT");
-        int objectCount = intent.getIntExtra("COUNT", 10);
-        String environmentType = intent.getStringExtra("ENVIRONMENT");
-
-        // Przekazanie informacji do GameSurfaceView
-        gameSurfaceView.setElementToDisplay(elementToDisplay);
-        gameSurfaceView.setObjectCount(objectCount);
-        gameSurfaceView.setEnvironmentType(environmentType);
+        if (savedInstanceState != null) {
+            gameSurfaceView.restoreState(savedInstanceState);
+        } else {
+            Intent intent = getIntent();
+            gameSurfaceView.setElementToDisplay(intent.getStringExtra("ELEMENT"));
+            gameSurfaceView.setObjectCount(intent.getIntExtra("COUNT", 10));
+            gameSurfaceView.setEnvironmentType(intent.getStringExtra("ENVIRONMENT"));
+        }
 
         gameSurfaceView.setCallbacks(new GameSurfaceView.Callbacks() {
             @Override
@@ -41,5 +39,38 @@ public class GameActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("ELEMENT", gameSurfaceView.getElementToDisplay());
+        outState.putString("ENVIRONMENT", gameSurfaceView.getEnvironmentType());
+        outState.putInt("COUNT", gameSurfaceView.getObjectCount());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        String elementToDisplay = savedInstanceState.getString("ELEMENT");
+        String environmentType = savedInstanceState.getString("ENVIRONMENT");
+        int objectCount = savedInstanceState.getInt("COUNT");
+
+        gameSurfaceView.setElementToDisplay(elementToDisplay);
+        gameSurfaceView.setEnvironmentType(environmentType);
+        gameSurfaceView.setObjectCount(objectCount);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        gameSurfaceView.pauseGameLoop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gameSurfaceView.resumeGameLoop();
+    }
+
+
 }
 

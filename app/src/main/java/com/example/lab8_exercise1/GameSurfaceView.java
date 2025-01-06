@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.Choreographer;
 import android.view.Display;
@@ -210,5 +211,40 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public void surfaceDestroyed(SurfaceHolder holder) {
         Choreographer.getInstance().removeFrameCallback(this);
     }
+    public Bundle saveState() {
+        Bundle bundle = new Bundle();
+        bundle.putString("ELEMENT", elementToDisplay);
+        bundle.putString("ENVIRONMENT", environmentType);
+        bundle.putInt("COUNT", balls.size()); // Przykład: zapisanie liczby obiektów
+        return bundle;
+    }
+
+    public void restoreState(Bundle bundle) {
+        if (bundle != null) {
+            setElementToDisplay(bundle.getString("ELEMENT"));
+            setEnvironmentType(bundle.getString("ENVIRONMENT"));
+            setObjectCount(bundle.getInt("COUNT"));
+        }
+    }
+    public void pauseGameLoop() {
+        Choreographer.getInstance().removeFrameCallback(this);
+    }
+
+    public void resumeGameLoop() {
+        Choreographer.getInstance().postFrameCallback(this);
+    }
+    public String getElementToDisplay() {
+        return elementToDisplay;
+    }
+
+    public String getEnvironmentType() {
+        return environmentType;
+    }
+
+    public int getObjectCount() {
+        return balls.size(); // Zwracamy liczbę obiektów (piłek), zakładając, że piłki i kwadraty są zawsze równe liczebnie
+    }
+
+
 
 }
